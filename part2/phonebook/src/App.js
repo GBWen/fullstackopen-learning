@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import personService from './services/person'
+import './App.css';
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [displayPersons, setDisplayPersons] = useState([])
+    const [message, setMessage] = useState(null)
 
     useEffect(() => {
         personService
@@ -12,6 +14,14 @@ const App = () => {
                 setPersons(response)
                 setDisplayPersons(displayPersons)
             })
+            .catch(
+                (err) => {
+                    setMessage({
+                        text: `GetAll error! ${err}`,
+                        type: "error",
+                    })
+                }
+            )
     }, [])
 
     const [newName, setNewName] = useState('')
@@ -35,6 +45,13 @@ const App = () => {
                     setPersons(newPersons)
                     displayPersons.push(newPerson)
                     setDisplayPersons(newPersons)
+                    setMessage({
+                        text: `${newPerson.name} has been added`,
+                        type: "success",
+                    })
+                    setTimeout(() => {
+                        setMessage(null)
+                    }, 3000)
                 })
         } else {
             const result = window.confirm(`Update ${newPerson.name}`)
@@ -47,6 +64,13 @@ const App = () => {
                         setPersons(newPersons)
                         const newDisplayPersons = displayPersons.map(item => item.id === response.id ? newPerson : item)
                         setDisplayPersons(newDisplayPersons)
+                        setMessage({
+                            text: `${newPerson.name} has been updated`,
+                            type: "success",
+                        })
+                        setTimeout(() => {
+                            setMessage(null)
+                        }, 3000)
                     })
             }
         }
@@ -90,6 +114,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message}/>
             <Filter
                 handleFilter={handleFilter}
                 filterName={filterName}
@@ -148,6 +173,18 @@ const Content = ({persons, handleDelete}) => {
                             <button onClick={() => handleDelete(person)}>delete</button>
                         </p>)
             }
+        </div>
+    )
+}
+
+const Notification = ({message}) => {
+    if (message == null) {
+        return null
+    }
+    console.log(message)
+    return (
+        <div className={`notification notification_${message.type}`}>
+            {message.text}
         </div>
     )
 }
