@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -15,11 +16,6 @@ app.use(morgan((tokens, req, res) => {
         JSON.stringify(req.body)
     ].join(' ')
 }))
-
-// const unknownEndpoint = (request, response) => {
-//     response.status(404).send({ error: 'unknown endpoint' })
-// }
-// app.use(unknownEndpoint)
 
 let persons = [
     [
@@ -113,7 +109,12 @@ app.delete('/api/persons/:id', (request, response, next) => {
     }
 })
 
-const PORT = 3001;
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

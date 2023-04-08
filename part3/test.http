@@ -40,3 +40,7 @@ Content-Type: application/json
   "name": "2",
   "number": "123"
 }
+
+###
+GET http://localhost:3001/unkonwn
+Accept: application/json
