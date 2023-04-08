@@ -11,7 +11,7 @@ const App = () => {
         personService
             .getAll()
             .then(response => {
-                setPersons(response)
+                setPersons(response[0])
                 setDisplayPersons(displayPersons)
             })
             .catch(
@@ -60,9 +60,9 @@ const App = () => {
                     .update(exist[0].id, newPerson)
                     .then(response => {
                         newPerson.id = exist[0].id
-                        const newPersons = persons.map(item => item.id === response.id ? newPerson : item)
+                        const newPersons = persons.map(item => item.id === exist[0].id ? newPerson : item)
                         setPersons(newPersons)
-                        const newDisplayPersons = displayPersons.map(item => item.id === response.id ? newPerson : item)
+                        const newDisplayPersons = displayPersons.map(item => item.id === exist[0].id ? newPerson : item)
                         setDisplayPersons(newDisplayPersons)
                         setMessage({
                             text: `${newPerson.name} has been updated`,
@@ -107,7 +107,9 @@ const App = () => {
 
     const handleFilter = (event) => {
         event.preventDefault()
-        const newDisplayPersons = persons.filter(p => p.name.indexOf(filterName) !== -1)
+        const newDisplayPersons = persons.filter(p => {
+            return p.name.indexOf(filterName) !== -1
+        })
         setDisplayPersons(newDisplayPersons)
     }
 

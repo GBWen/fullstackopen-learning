@@ -1,6 +1,8 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 const morgan = require('morgan')
 app.use(morgan((tokens, req, res) => {
@@ -14,10 +16,10 @@ app.use(morgan((tokens, req, res) => {
     ].join(' ')
 }))
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-}
-app.use(unknownEndpoint)
+// const unknownEndpoint = (request, response) => {
+//     response.status(404).send({ error: 'unknown endpoint' })
+// }
+// app.use(unknownEndpoint)
 
 let persons = [
     [
@@ -66,6 +68,17 @@ app.get('/api/persons/:id', (request, response, next) => {
     const person = persons[0].filter(p => p.id.toString() === request.params.id)
     if (person.length > 0) {
         response.json(person)
+    } else {
+        response.status(404).end()
+    }
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const person = persons[0].filter(p => p.id.toString() === request.params.id)
+    if (person.length > 0) {
+        person[0].name = request.body.name
+        person[0].number = request.body.number
+        response.status(200).end()
     } else {
         response.status(404).end()
     }

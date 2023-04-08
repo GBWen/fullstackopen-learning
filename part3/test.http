@@ -31,3 +31,12 @@ Content-Type: application/json
   "name": "",
   "number": "123"
 }
+
+###
+PUT http://localhost:3001/api/persons/1
+Content-Type: application/json
+
+{
+  "name": "2",
+  "number": "123"
+}
